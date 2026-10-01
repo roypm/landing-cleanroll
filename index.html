@@ -46,6 +46,11 @@
         scroll-behavior: smooth;
         scroll-padding-top: 88px;
         background: #0c121b;
+        overflow-x: clip;
+      }
+
+      body {
+        overflow-x: clip;
       }
 
       ::selection {
@@ -177,7 +182,7 @@
         margin-top: 3.5rem;
       }
 
-      @media (min-width: 800px) {
+      @media (min-width: 960px) {
         .detail-mosaic {
           grid-template-columns: repeat(12, minmax(0, 1fr));
           grid-template-rows: auto auto auto;
@@ -252,6 +257,12 @@
 
       .lang-switch button:hover {
         color: #fff;
+      }
+
+      @media (max-width: 767px) {
+        .footer-lang {
+          display: none;
+        }
       }
 
       .marquee-shell {
@@ -453,6 +464,13 @@
 
       <nav id="mobile-menu" class="hidden bg-[#0c121b]/95 md:hidden" data-i18n="nav.mobile" data-i18n-attr="aria-label" aria-label="Mobile">
         <div class="mx-auto flex max-w-[1150px] flex-col px-5 py-2">
+          <div class="py-4">
+            <div class="lang-switch" role="group" data-i18n="lang.group" data-i18n-attr="aria-label" aria-label="Language">
+              <button type="button" data-lang-button="en" aria-pressed="true" aria-label="English">EN</button>
+              <button type="button" data-lang-button="es" aria-pressed="false" aria-label="Castellano">ES</button>
+              <button type="button" data-lang-button="ca" aria-pressed="false" aria-label="Català">CA</button>
+            </div>
+          </div>
           <a href="#recorrido" class="soft-link py-4 text-base font-medium" data-i18n="nav.how">How it works</a>
           <a href="#privacidad" class="soft-link py-4 text-base font-medium" data-i18n="nav.privacy">Privacy</a>
           <a
@@ -629,7 +647,7 @@
               <span class="accent" data-i18n="privacy.accent">never</span>
               <span data-i18n="privacy.rest">leave.</span>
             </h2>
-            <p class="mt-6 max-w-md text-base leading-normal text-whiteout/70 lg:max-w-none" data-i18n="privacy.body">
+            <p class="mx-auto mt-6 max-w-md text-base leading-normal text-whiteout/70 lg:mx-0 lg:max-w-none" data-i18n="privacy.body">
               CleanRoll has no account, no server, and no analytics. The walkthrough needs no network. On the phone, only the theme and the language are saved. Everything else lives while the app is open.
             </p>
           </div>
@@ -640,7 +658,7 @@
               <span data-i18n="install.title">Install it</span>
               <span class="accent" data-i18n="install.accent">now</span>.
             </h2>
-            <p class="mt-6 max-w-md text-base leading-normal text-whiteout/70 lg:max-w-none" data-i18n="install.body">
+            <p class="mx-auto mt-6 max-w-md text-base leading-normal text-whiteout/70 lg:mx-0 lg:max-w-none" data-i18n="install.body">
               Android, as an APK. CleanRoll does not update itself and there is nothing to export before changing versions.
             </p>
             <a
@@ -681,7 +699,7 @@
           <p class="text-base font-medium text-whiteout">© 2026 CleanRoll</p>
           <p class="mt-2" data-i18n="footer.rights">All rights reserved.</p>
         </div>
-        <div class="lang-switch" role="group" data-i18n="lang.group" data-i18n-attr="aria-label" aria-label="Language">
+        <div class="lang-switch footer-lang" role="group" data-i18n="lang.group" data-i18n-attr="aria-label" aria-label="Language">
           <button type="button" data-lang-button="en" aria-pressed="true" aria-label="English">EN</button>
           <button type="button" data-lang-button="es" aria-pressed="false" aria-label="Castellano">ES</button>
           <button type="button" data-lang-button="ca" aria-pressed="false" aria-label="Català">CA</button>
@@ -750,9 +768,9 @@
           "steps.2.title": "Choose the order",
           "steps.2.body": "Newest first, oldest first, or a one-time shuffle. Photos in the album appear in that order.",
           "steps.3.title": "Swipe",
-          "steps.3.body": "One way you keep it. The other, you mark it. A tap works too. Undo covers the last five decisions.",
+          "steps.3.body": "Swipe one way to keep it, the other to mark it. A tap works too. Undo covers the last five decisions.",
           "steps.4.title": "Review",
-          "steps.4.body": "Open Review whenever you want, including halfway through the album. Remove the ones you don't want and look at a thumbnail full screen.",
+          "steps.4.body": "Open Review whenever you want, even halfway through the album. Remove photos you don't want and open a thumbnail full screen.",
           "steps.5.title": "Confirm",
           "steps.5.body": "Delete opens the system dialog. If you cancel, you stay on Review with the selection intact.",
           "detail.label": "The detail",
@@ -760,17 +778,17 @@
           "detail.accent": "not",
           "detail.rest": "miss.",
           "detail.mark.title": "Mark, don't delete",
-          "detail.mark.body": "Swiping Delete only flags the photo. The gallery changes when you confirm deletion in Review.",
+          "detail.mark.body": "Swiping Delete only marks the photo. The gallery changes when you confirm deletion in Review.",
           "detail.session.title": "Session in memory",
           "detail.session.body": "If you close the app before confirming, the library stays the same. There is no half-finished cleanup saved to disk.",
           "detail.large.title": "Large albums",
-          "detail.large.body": "You don't have to reach the end. Review, delete the current selection, and continue on the same photo.",
-          "detail.orders.title": "Three orders",
-          "detail.orders.body": "Newest to oldest, the other way around, or a shuffle that happens once when you open the album.",
+          "detail.large.body": "You don't have to reach the end. Open Review, delete the current selection, and continue from the same photo.",
+          "detail.orders.title": "Three sort orders",
+          "detail.orders.body": "Newest to oldest, oldest to newest, or a shuffle that happens once when you open the album.",
           "detail.limited.title": "Limited access",
           "detail.limited.body": "If you allow only some photos, CleanRoll only sees those. The rest of the gallery stays out of the session.",
           "detail.result.title": "Clear result",
-          "detail.result.body": "When it finishes it says whether everything, part, or nothing was deleted. Canceling the system dialog does not count as a failure.",
+          "detail.result.body": "When it finishes, it tells you whether everything, part, or nothing was deleted. Canceling the system dialog does not count as a failure.",
           "privacy.label": "Privacy",
           "privacy.title": "Photos",
           "privacy.accent": "never",
@@ -779,21 +797,16 @@
           "install.label": "Download",
           "install.title": "Install it",
           "install.accent": "now",
-          "install.body": "Android, as an APK. CleanRoll does not update itself and there is nothing to export before changing versions.",
+          "install.body": "Android, as an APK. CleanRoll does not update itself, and there is nothing to export before changing versions.",
           "install.cta": "Download APK",
           "install.notes": "Release notes",
-          "install.phone": "On the phone",
-          "install.step1": "Download the APK.",
-          "install.step2": "Open CleanRoll and grant photo access, full or only some.",
-          "install.signing": "Published APKs are signed with the debug key. If Android rejects an update because the signature does not match, uninstall the previous version and install the new one. Uninstalling the app does not delete your photos.",
-          "install.code": "Code on GitHub",
           "footer.rights": "All rights reserved.",
           "footer.by": "Made by",
           "footer.versions": "All versions",
         },
         es: {
           "meta.title": "CleanRoll — Limpia tu carrete sin subir una foto",
-          "meta.description": "CleanRoll es un limpiador de fotos local para Android. Elige un álbum, desliza para quedarte o marcar, revisa y confirma el borrado con el diálogo del sistema.",
+          "meta.description": "CleanRoll es un limpiador de fotos local para Android. Elige un álbum, desliza para quedártela o marcarla, revisa y confirma el borrado con el diálogo del sistema.",
           "meta.og": "Elige un álbum, desliza, revisa y confirma. Las fotos no salen del teléfono.",
           skip: "Saltar al contenido",
           "nav.primary": "Principal",
@@ -810,13 +823,13 @@
           "hero.display": "Limpia",
           "hero.line": "el carrete queda",
           "hero.accent": "local.",
-          "hero.body": "Elige un álbum, desliza para quedarte una foto o marcarla, y confirma el borrado cuando tú quieras. Las fotos no salen del teléfono.",
+          "hero.body": "Elige un álbum, desliza para quedarte una foto o marcarla, y confirma el borrado cuando quieras. Las fotos no salen del teléfono.",
           "hero.cta": "Descargar APK",
           "hero.see": "Ver cómo funciona",
           "facts.aria": "En una frase",
           "facts.phone": "Solo en el teléfono",
           "facts.account": "Sin cuenta",
-          "facts.analytics": "Sin analytics",
+          "facts.analytics": "Sin analítica",
           "facts.server": "Sin servidor",
           "steps.label": "Cómo funciona",
           "steps.title": "Cinco pasos.",
@@ -825,11 +838,11 @@
           "steps.1.title": "Elige un álbum",
           "steps.1.body": "Una carpeta de la galería. CleanRoll no crea, no renombra y no mueve álbumes.",
           "steps.2.title": "Elige el orden",
-          "steps.2.body": "Más nuevas primero, más antiguas primero, o un barajado de una sola vez. En ese orden aparecen las fotos del álbum.",
+          "steps.2.body": "Más nuevas primero, más antiguas primero, o un orden aleatorio de una sola vez. Las fotos del álbum aparecen en ese orden.",
           "steps.3.title": "Desliza",
-          "steps.3.body": "A un lado te la quedas. Al otro, la marcas. También vale un toque. Deshacer cubre las últimas cinco decisiones.",
+          "steps.3.body": "Desliza hacia un lado para quedártela y hacia el otro para marcarla. También vale un toque. Deshacer cubre las últimas cinco decisiones.",
           "steps.4.title": "Revisa",
-          "steps.4.body": "Abre Review cuando quieras, también a mitad del álbum. Quita las que no y mira una miniatura a pantalla completa.",
+          "steps.4.body": "Abre Review cuando quieras, también a mitad del álbum. Quita las que no quieras y mira una miniatura a pantalla completa.",
           "steps.5.title": "Confirma",
           "steps.5.body": "Borrar abre el diálogo del sistema. Si lo cancelas, sigues en Review con la selección intacta.",
           "detail.label": "El detalle",
@@ -837,35 +850,30 @@
           "detail.accent": "no",
           "detail.rest": "equivocarte.",
           "detail.mark.title": "Marca, no borra",
-          "detail.mark.body": "Deslizar Delete solo apunta la foto. La galería cambia cuando confirmas el borrado en Review.",
+          "detail.mark.body": "Deslizar Delete solo marca la foto. La galería cambia cuando confirmas el borrado en Review.",
           "detail.session.title": "Sesión en memoria",
-          "detail.session.body": "Si cierras la app antes de confirmar, la biblioteca sigue igual. No hay una limpieza a medias guardada en disco.",
+          "detail.session.body": "Si cierras la app antes de confirmar, la biblioteca sigue igual. No hay una limpieza a medias guardada en el disco.",
           "detail.large.title": "Álbumes grandes",
-          "detail.large.body": "No hace falta llegar al final. Revisas, borras la selección de ahora y sigues en la misma foto.",
+          "detail.large.body": "No hace falta llegar al final. Abres Review, borras la selección actual y sigues en la misma foto.",
           "detail.orders.title": "Tres órdenes",
-          "detail.orders.body": "De más nuevas a más antiguas, al revés, o un barajado que se hace una sola vez al abrir el álbum.",
+          "detail.orders.body": "De más nuevas a más antiguas, al revés, o un orden aleatorio que se genera una sola vez al abrir el álbum.",
           "detail.limited.title": "Acceso limitado",
           "detail.limited.body": "Si solo permites algunas fotos, CleanRoll solo ve esas. El resto de la galería no entra en la sesión.",
           "detail.result.title": "Resultado claro",
-          "detail.result.body": "Al terminar dice si se borró todo, una parte o nada. Cancelar el diálogo del sistema no cuenta como fallo.",
+          "detail.result.body": "Al terminar indica si se borró todo, una parte o nada. Cancelar el diálogo del sistema no cuenta como error.",
           "privacy.label": "Privacidad",
           "privacy.title": "Las fotos",
           "privacy.accent": "no",
           "privacy.rest": "salen.",
-          "privacy.body": "CleanRoll no tiene cuenta, servidor ni analítica. Nada de esto necesita red. En el teléfono solo se guardan el tema y el idioma. Lo demás vive mientras la app está abierta.",
+          "privacy.body": "CleanRoll no tiene cuenta, servidor ni analítica. Nada de esto necesita red. En el teléfono solo se guardan el tema y el idioma. El resto vive mientras la app está abierta.",
           "install.label": "Descarga",
           "install.title": "Instálala",
           "install.accent": "ahora",
           "install.body": "Android, en un APK. CleanRoll no se actualiza sola y no hay nada que exportar antes de cambiar de versión.",
           "install.cta": "Descargar APK",
-          "install.notes": "Notas de esta versión",
-          "install.phone": "En el teléfono",
-          "install.step1": "Descarga el APK.",
-          "install.step2": "Abre CleanRoll y concede acceso a las fotos, completo o solo a algunas.",
-          "install.signing": "Las APK publicadas van firmadas con la clave de depuración. Si Android rechaza una actualización porque la firma no coincide, desinstala la versión anterior e instala la nueva. Desinstalar la app no borra las fotos.",
-          "install.code": "Código en GitHub",
-          "footer.rights": "Derechos reservados.",
-          "footer.by": "Creado por",
+          "install.notes": "Notas de la versión",
+          "footer.rights": "Todos los derechos reservados.",
+          "footer.by": "Hecho por",
           "footer.versions": "Todas las versiones",
         },
         ca: {
@@ -878,18 +886,18 @@
           "nav.how": "Com funciona",
           "nav.privacy": "Privadesa",
           "nav.github": "GitHub de CleanRoll",
-          "nav.download": "Baixa l'APK",
-          "nav.downloadShort": "Baixa",
+          "nav.download": "Descarrega l'APK",
+          "nav.downloadShort": "Descarrega",
           "menu.open": "Menú",
           "menu.close": "Tanca",
-          "lang.group": "Llengua",
+          "lang.group": "Idioma",
           "hero.eyebrow": "Netejador de fotos per a Android",
           "hero.display": "Neteja",
           "hero.line": "el carret queda",
           "hero.accent": "local.",
-          "hero.body": "Tria un àlbum, llisca per quedar-te una foto o marcar-la, i confirma l'esborrat quan tu vulguis. Les fotos no surten del telèfon.",
-          "hero.cta": "Baixa l'APK",
-          "hero.see": "Mira com funciona",
+          "hero.body": "Tria un àlbum, llisca per quedar-te una foto o marcar-la, i confirma l'esborrat quan vulguis. Les fotos no surten del telèfon.",
+          "hero.cta": "Descarrega l'APK",
+          "hero.see": "Veure com funciona",
           "facts.aria": "En una frase",
           "facts.phone": "Només al telèfon",
           "facts.account": "Sense compte",
@@ -902,11 +910,11 @@
           "steps.1.title": "Tria un àlbum",
           "steps.1.body": "Una carpeta de la galeria. CleanRoll no crea, no reanomena i no mou àlbums.",
           "steps.2.title": "Tria l'ordre",
-          "steps.2.body": "Primer les més noves, primer les més antigues, o una barreja d'una sola vegada. En aquest ordre apareixen les fotos de l'àlbum.",
+          "steps.2.body": "Primer les més noves, primer les més antigues, o un ordre aleatori d'una sola vegada. Les fotos de l'àlbum apareixen en aquest ordre.",
           "steps.3.title": "Llisca",
-          "steps.3.body": "Cap a un costat te la quedes. Cap a l'altre, la marques. També val un toc. Desfer cobreix les últimes cinc decisions.",
+          "steps.3.body": "Llisca cap a un costat per quedar-te-la i cap a l'altre per marcar-la. També val un toc. Desfer cobreix les últimes cinc decisions.",
           "steps.4.title": "Revisa",
-          "steps.4.body": "Obre Review quan vulguis, també a mig àlbum. Treu les que no i mira una miniatura a pantalla completa.",
+          "steps.4.body": "Obre Review quan vulguis, també a mig àlbum. Treu les que no vulguis i mira una miniatura a pantalla completa.",
           "steps.5.title": "Confirma",
           "steps.5.body": "Esborrar obre el diàleg del sistema. Si el cancel·les, continues a Review amb la selecció intacta.",
           "detail.label": "El detall",
@@ -914,35 +922,30 @@
           "detail.accent": "no",
           "detail.rest": "equivocar-te.",
           "detail.mark.title": "Marca, no esborra",
-          "detail.mark.body": "Lliscar Delete només apunta la foto. La galeria canvia quan confirmes l'esborrat a Review.",
+          "detail.mark.body": "Lliscar Delete només marca la foto. La galeria canvia quan confirmes l'esborrat a Review.",
           "detail.session.title": "Sessió en memòria",
-          "detail.session.body": "Si tanques l'app abans de confirmar, la biblioteca segueix igual. No hi ha una neteja a mitges desada al disc.",
+          "detail.session.body": "Si tanques l'app abans de confirmar, la biblioteca continua igual. No hi ha una neteja a mitges desada al disc.",
           "detail.large.title": "Àlbums grans",
-          "detail.large.body": "No cal arribar al final. Revises, esborres la selecció d'ara i continues a la mateixa foto.",
+          "detail.large.body": "No cal arribar al final. Obres Review, esborres la selecció actual i continues a la mateixa foto.",
           "detail.orders.title": "Tres ordres",
-          "detail.orders.body": "De més noves a més antigues, a l'inrevés, o una barreja que es fa una sola vegada en obrir l'àlbum.",
+          "detail.orders.body": "De més noves a més antigues, a l'inrevés, o un ordre aleatori que es genera una sola vegada en obrir l'àlbum.",
           "detail.limited.title": "Accés limitat",
           "detail.limited.body": "Si només permets algunes fotos, CleanRoll només veu aquestes. La resta de la galeria no entra a la sessió.",
           "detail.result.title": "Resultat clar",
-          "detail.result.body": "En acabar diu si s'ha esborrat tot, una part o res. Cancel·lar el diàleg del sistema no compta com a error.",
+          "detail.result.body": "En acabar indica si s'ha esborrat tot, una part o res. Cancel·lar el diàleg del sistema no compta com a error.",
           "privacy.label": "Privadesa",
           "privacy.title": "Les fotos",
           "privacy.accent": "no",
           "privacy.rest": "surten.",
-          "privacy.body": "CleanRoll no té compte, servidor ni analítica. Res d'això necessita xarxa. Al telèfon només es desen el tema i la llengua. La resta viu mentre l'app és oberta.",
-          "install.label": "Baixada",
+          "privacy.body": "CleanRoll no té compte, servidor ni analítica. Res d'això necessita xarxa. Al telèfon només es desen el tema i l'idioma. La resta viu mentre l'app és oberta.",
+          "install.label": "Descàrrega",
           "install.title": "Instal·la-la",
           "install.accent": "ara",
           "install.body": "Android, en un APK. CleanRoll no s'actualitza sola i no hi ha res per exportar abans de canviar de versió.",
-          "install.cta": "Baixa l'APK",
-          "install.notes": "Notes d'aquesta versió",
-          "install.phone": "Al telèfon",
-          "install.step1": "Baixa l'APK.",
-          "install.step2": "Obre CleanRoll i concedeix accés a les fotos, complet o només a algunes.",
-          "install.signing": "Els APK publicats van signats amb la clau de depuració. Si Android rebutja una actualització perquè la signatura no coincideix, desinstal·la la versió anterior i instal·la la nova. Desinstal·lar l'app no esborra les fotos.",
-          "install.code": "Codi a GitHub",
+          "install.cta": "Descarrega l'APK",
+          "install.notes": "Notes de la versió",
           "footer.rights": "Tots els drets reservats.",
-          "footer.by": "Creat per",
+          "footer.by": "Fet per",
           "footer.versions": "Totes les versions",
         },
       };
