@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CleanRoll — Clean your camera roll without uploading a photo</title>
+    <meta
+      name="description"
+      content="CleanRoll is a local photo cleaner for Android. Pick an album, swipe to keep or mark, review, and confirm deletion with the system dialog."
+    />
+    <meta property="og:title" content="CleanRoll — Clean your camera roll without uploading a photo" />
+    <meta
+      property="og:description"
+      content="Pick an album, swipe, review, and confirm. Photos never leave the phone."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:image"
+      content="https://raw.githubusercontent.com/roypm/cleanroll/main/assets/icon/app_icon.png"
+    />
+    <link rel="icon" href="assets/brand/favicon.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:ital@0;1&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      @theme {
+        --color-whiteout: #ffffff;
+        --color-haze: #f5f5f5;
+        --color-ink: #1b1b1b;
+        --color-black-void: #000000;
+        --color-twilight-blue: #426188;
+        --color-signal-blue: #2b7fff;
+
+        --font-control: "Inter", ui-sans-serif, system-ui, sans-serif;
+        --font-control-compressed: "Anton", sans-serif;
+        --font-control-cursive: "Caveat", cursive;
+
+        --radius-cards: 12px;
+        --radius-buttons: 8px;
+        --radius-images: 11px;
+      }
+    </style>
+    <style>
+      html {
+        color-scheme: dark;
+        scroll-behavior: smooth;
+        scroll-padding-top: 88px;
+        background: #000;
+      }
+
+      ::selection {
+        background: #426188;
+        color: #fff;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-black-void font-control text-base font-normal leading-normal text-whiteout antialiased">
+    <svg class="absolute h-px w-px overflow-hidden" aria-hidden="true">
+      <symbol id="github-mark" viewBox="0 0 16 16">
+        <path
+          fill="currentColor"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"
+        />
+      </symbol>
+    </svg>
+    <a
+      href="#contenido"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-20 focus:bg-haze focus:px-4 focus:py-2 focus:text-ink"
+      data-i18n="skip"
+    >
+      Skip to content
+    </a>
+
+    <header class="sticky top-0 z-10 border-b border-whiteout bg-black-void">
+      <div class="mx-auto flex h-[72px] max-w-[1150px] items-center justify-between px-5">
+        <a href="#contenido" class="flex items-center gap-2">
+          <img src="assets/brand/logo.png" alt="" width="32" height="32" class="h-8 w-8" />
+          <span class="text-base font-medium">CleanRoll</span>
+        </a>
+
+        <nav class="hidden items-center gap-6 md:flex" data-i18n="nav.primary" data-i18n-attr="aria-label" aria-label="Primary">
+          <div class="flex items-center gap-3" role="group" data-i18n="lang.group" data-i18n-attr="aria-label" aria-label="Language">
+            <button type="button" data-lang-button="en" class="border-b-2 border-transparent pb-0.5 text-sm font-medium" aria-pressed="true" aria-label="English">EN</button>
+            <button type="button" data-lang-button="es" class="border-b-2 border-signal-blue pb-0.5 text-sm font-medium text-signal-blue" aria-pressed="false" aria-label="Castellano">ES</button>
+            <button type="button" data-lang-button="ca" class="border-b-2 border-signal-blue pb-0.5 text-sm font-medium text-signal-blue" aria-pressed="false" aria-label="Català">CA</button>
+          </div>
+          <a href="#recorrido" class="text-sm font-medium" data-i18n="nav.walkthrough">Walkthrough</a>
+          <a href="#privacidad" class="text-sm font-medium" data-i18n="nav.privacy">Privacy</a>
+          <a
+            href="https://github.com/roypm/cleanroll"
+            class="inline-flex items-center gap-2 rounded-buttons border border-whiteout px-4 py-[10px] text-sm font-medium"
+            rel="noreferrer"
+            target="_blank"
+          >
+            <svg class="h-4 w-4" aria-hidden="true"><use href="#github-mark"></use></svg>
+            GitHub
+          </a>
+          <a
+            id="nav-download"
+            data-download
+            href="https://github.com/roypm/cleanroll/releases/download/v1.0.2/CleanRoll-v1.0.2.apk"
+            class="rounded-buttons border border-whiteout px-4 py-[10px] text-sm font-medium"
+            data-i18n="nav.download"
+          >
+            Download APK
+          </a>
+        </nav>
+
+        <div class="flex items-center gap-2 md:hidden">
+          <a
+            href="https://github.com/roypm/cleanroll"
+            class="inline-flex items-center justify-center rounded-buttons border border-whiteout p-[10px]"
+            rel="noreferrer"
+            target="_blank"
+            data-i18n="nav.github"
+            data-i18n-attr="aria-label"
+            aria-label="CleanRoll on GitHub"
+          >
+            <svg class="h-4 w-4" aria-hidden="true"><use href="#github-mark"></use></svg>
+          </a>
+          <button
+            id="menu-toggle"
+            type="button"
+            class="rounded-buttons border border-whiteout px-4 py-[10px] text-sm font-medium"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+          >
+            Menu
+          </button>
+        </div>
+      </div>
+
+      <nav id="mobile-menu" class="hidden border-t border-whiteout md:hidden" data-i18n="nav.mobile" data-i18n-attr="aria-label" aria-label="Mobile">
+        <div class="mx-auto flex max-w-[1150px] flex-col px-5 py-2">
+          <div class="flex items-center gap-4 py-4" role="group" data-i18n="lang.group" data-i18n-attr="aria-label" aria-label="Language">
+            <button type="button" data-lang-button="en" class="border-b-2 border-transparent pb-0.5 text-base font-medium" aria-pressed="true" aria-label="English">EN</button>
+            <button type="button" data-lang-button="es" class="border-b-2 border-signal-blue pb-0.5 text-base font-medium text-signal-blue" aria-pressed="false" aria-label="Castellano">ES</button>
+            <button type="button" data-lang-button="ca" class="border-b-2 border-signal-blue pb-0.5 text-base font-medium text-signal-blue" aria-pressed="false" aria-label="Català">CA</button>
+          </div>
+          <a href="#recorrido" class="py-4 text-base font-medium" data-i18n="nav.walkthrough">Walkthrough</a>
+          <a href="#privacidad" class="py-4 text-base font-medium" data-i18n="nav.privacy">Privacy</a>
+          <a
+            href="https://github.com/roypm/cleanroll"
+            class="inline-flex items-center gap-2 py-4 text-base font-medium"
+            rel="noreferrer"
+            target="_blank"
+          >
+            <svg class="h-4 w-4" aria-hidden="true"><use href="#github-mark"></use></svg>
+            GitHub
+          </a>
+          <a href="#descargar" class="py-4 text-base font-medium" data-i18n="nav.downloadShort">Download</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="contenido">
+      <section class="relative mx-auto max-w-[1150px] px-5 pt-12 pb-16 lg:min-h-[720px]">
+        <div class="lg:pr-[312px]">
+          <p class="text-[13px] font-medium leading-[1.5]" data-i18n="hero.eyebrow">Photo cleaner for Android</p>
+          <h1
+            class="mt-4 font-control-compressed text-[clamp(4.75rem,15vw,12rem)] leading-[0.85] font-normal tracking-normal text-whiteout uppercase"
+            data-i18n="hero.display"
+          >
+            Clean
+          </h1>
+          <p class="mt-8 max-w-xl text-[clamp(2rem,4vw,3.5rem)] leading-none font-medium text-twilight-blue">
+            <span data-i18n="hero.line">the camera roll stays</span>
+            <span class="font-control-cursive text-[1.05em] leading-none font-normal text-whiteout italic" data-i18n="hero.accent">local.</span>
+          </p>
+          <p class="mt-6 max-w-xl text-base leading-normal font-normal" data-i18n="hero.body">
+            Pick an album, swipe to keep a photo or mark it, and confirm deletion whenever you want. Photos never leave the phone.
+          </p>
+          <div class="mt-8 flex flex-wrap items-center gap-6">
+            <a
+              data-download
+              href="https://github.com/roypm/cleanroll/releases/download/v1.0.2/CleanRoll-v1.0.2.apk"
+              class="rounded-buttons border border-whiteout px-4 py-[10px] text-sm font-medium"
+              data-i18n="hero.cta"
+            >
+              Download APK
+            </a>
+            <a
+              href="#recorrido"
+              class="border-b-2 border-signal-blue px-2 pb-0.5 text-base font-medium text-signal-blue"
+              data-i18n="hero.see"
+            >
+              See the walkthrough
+            </a>
+          </div>
+          <p class="mt-4 text-[13px] leading-[1.5] font-medium">
+            <span data-filename>CleanRoll-v1.0.2.apk</span>
+            ·
+            <span data-size data-bytes="48911484">46.6 MB</span>
+          </p>
+        </div>
+
+        <figure class="mx-auto mt-12 w-[min(100%,280px)] lg:absolute lg:top-12 lg:right-5 lg:mt-0">
+          <div class="overflow-hidden rounded-[14px] border border-whiteout">
+            <video
+              id="demo"
+              class="block h-auto w-full"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              poster="assets/demo/poster.jpg"
+              width="540"
+              height="1118"
+              data-i18n="hero.video"
+              data-i18n-attr="aria-label"
+              aria-label="CleanRoll demo: albums, swipe, review, and confirm deletion"
+            >
+              <source src="assets/demo/demo.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="mt-3 flex items-center justify-between gap-3">
+            <span class="text-[13px] leading-[1.5] font-medium" data-i18n="hero.caption">Plays on its own</span>
+            <button
+              id="demo-toggle"
+              type="button"
+              class="rounded-buttons border border-whiteout px-4 py-[10px] text-sm font-medium"
+              aria-pressed="false"
+            >
+              Pause
+            </button>
+          </figcaption>
+        </figure>
+      </section>
+
+      <section class="border-y border-whiteout" data-i18n="facts.aria" data-i18n-attr="aria-label" aria-label="In one line">
+        <ul class="mx-auto flex max-w-[1150px] flex-wrap gap-x-8 gap-y-3 px-5 py-8 text-sm font-medium">
+          <li>Android</li>
+          <li data-i18n="facts.phone">On the phone only</li>
+          <li data-i18n="facts.account">No account</li>
+          <li data-i18n="facts.analytics">No analytics</li>
+        </ul>
+      </section>
+
+      <section id="recorrido" class="mx-auto max-w-[1150px] px-5 py-20">
+        <header class="mx-auto max-w-3xl text-center">
+          <p class="text-xl leading-[1.4] font-medium" data-i18n="steps.label">How it works</p>
+          <h2 class="mt-4 text-[clamp(2rem,5vw,3.5rem)] leading-none font-medium">
+            <span data-i18n="steps.title">Five steps.</span>
+            <span class="font-control-cursive font-normal italic" data-i18n="steps.accent">Zero</span>
+            <span data-i18n="steps.rest">rush.</span>
+          </h2>
+        </header>
+
+        <ol class="mt-12 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2">
+          <li>
+            <img
+              src="assets/walkthrough/01-album.jpg"
+              data-i18n="steps.1.alt"
+              data-i18n-attr="alt"
+              alt="CleanRoll album grid, with each cover and photo count"
+              width="900"
+              height="2003"
+              loading="lazy"
+              class="mx-auto h-[520px] w-auto rounded-images border border-whiteout"
+            />
+            <p class="mt-5 text-[13px] leading-[1.5] font-medium">01</p>
+            <h3 class="mt-2 text-[32px] leading-[1.1] font-medium" data-i18n="steps.1.title">Pick an album</h3>
+            <p class="mt-3 text-base leading-normal" data-i18n="steps.1.body">
+              A folder from the gallery. CleanRoll does not create, rename, or move albums.
+            </p>
+          </li>
+          <li>
+            <img
+              src="assets/walkthrough/02-order.jpg"
+              data-i18n="steps.2.alt"
+              data-i18n-attr="alt"
+              alt="Sheet for choosing album order: newest, oldest, or random"
+              width="900"
+              height="1862"
+              loading="lazy"
+              class="mx-auto h-[520px] w-auto rounded-images border border-whiteout"
+            />
+            <p class="mt-5 text-[13px] leading-[1.5] font-medium">02</p>
+            <h3 class="mt-2 text-[32px] leading-[1.1] font-medium" data-i18n="steps.2.title">Choose the order</h3>
+            <p class="mt-3 text-base leading-normal" data-i18n="steps.2.body">
+              Newest first, oldest first, or a one-time shuffle. Photos in the album appear in that order.
+            </p>
+          </li>
+          <li>
+            <img
+              src="assets/walkthrough/03-delete.jpg"
+              data-i18n="steps.3.alt"
+              data-i18n-attr="alt"
+              alt="A tilted photo stamped Delete while swiping to mark it"
+              width="900"
+              height="2003"
+              loading="lazy"
+              class="mx-auto h-[520px] w-auto rounded-images border border-whiteout"
+            />
+            <p class="mt-5 text-[13px] leading-[1.5] font-medium">03</p>
+            <h3 class="mt-2 text-[32px] leading-[1.1] font-medium" data-i18n="steps.3.title">Swipe</h3>
+            <p class="mt-3 text-base leading-normal" data-i18n="steps.3.body">
+              One way you keep it. The other, you mark it. A tap works too. Undo covers the last five decisions.
+            </p>
+          </li>
+          <li>
+            <img
+              src="assets/walkthrough/04-review.jpg"
+              data-i18n="steps.4.alt"
+              data-i18n-attr="alt"
+              alt="Review screen with two selected photos and the button to delete them"
+              width="900"
+              height="2003"
+              loading="lazy"
+              class="mx-auto h-[520px] w-auto rounded-images border border-whiteout"
+            />
+            <p class="mt-5 text-[13px] leading-[1.5] font-medium">04</p>
+            <h3 class="mt-2 text-[32px] leading-[1.1] font-medium" data-i18n="steps.4.title">Review</h3>
+            <p class="mt-3 text-base leading-normal" data-i18n="steps.4.body">
+              Open Review whenever you want, including halfway through the album. Remove the ones you don't want and look at a thumbnail full screen.
+            </p>
+          </li>
+          <li>
+            <img
+              src="assets/walkthrough/05-confirm.jpg"
+              data-i18n="steps.5.alt"
+              data-i18n-attr="alt"
+              alt="Android dialog asking whether CleanRoll can delete four photos"
+              width="900"
+              height="1862"
+              loading="lazy"
+              class="mx-auto h-[520px] w-auto rounded-images border border-whiteout"
+            />
+            <p class="mt-5 text-[13px] leading-[1.5] font-medium">05</p>
+            <h3 class="mt-2 text-[32px] leading-[1.1] font-medium" data-i18n="steps.5.title">Confirm</h3>
+            <p class="mt-3 text-base leading-normal" data-i18n="steps.5.body">
+              Delete opens the system dialog. If you cancel, you stay on Review with the selection intact.
+            </p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="mx-auto max-w-[1150px] px-5 pb-20" aria-labelledby="detalles-titulo">
+        <header class="mx-auto max-w-3xl text-center">
+          <p class="text-xl leading-[1.4] font-medium" data-i18n="detail.label">The detail</p>
+          <h2 id="detalles-titulo" class="mt-4 text-[clamp(2rem,5vw,3.5rem)] leading-none font-medium">
+            <span data-i18n="detail.title">Built to</span>
+            <span class="font-control-cursive font-normal italic" data-i18n="detail.accent">not</span>
+            <span data-i18n="detail.rest">miss.</span>
+          </h2>
+        </header>
+
+        <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <article class="rounded-cards bg-haze p-5 text-ink">
+            <h3 class="text-xl leading-[1.4] font-medium" data-i18n="detail.mark.title">Mark, don't delete</h3>
+            <p class="mt-2 text-base leading-normal font-normal" data-i18n="detail.mark.body">
+              Swiping Delete only flags the photo. The gallery changes when you confirm deletion in Review.
+            </p>
+          </article>
+          <article class="rounded-cards bg-haze p-5 text-ink">
+            <h3 class="text-xl leading-[1.4] font-medium" data-i18n="detail.session.title">Session in memory</h3>
+            <p class="mt-2 text-base leading-normal font-normal" data-i18n="detail.session.body">
+              If you close the app before confirming, the library stays the same. There is no half-finished cleanup saved to disk.
+            </p>
+          </article>
+          <article class="rounded-cards bg-haze p-5 text-ink">
+            <h3 class="text-xl leading-[1.4] font-medium" data-i18n="detail.large.title">Large albums</h3>
+            <p class="mt-2 text-base leading-normal font-normal" data-i18n="detail.large.body">
+              You don't have to reach the end. Review, delete the current selection, and continue on the same photo.
+            </p>
+          </article>
+          <article class="rounded-cards bg-haze p-5 text-ink">
+            <h3 class="text-xl leading-[1.4] font-medium" data-i18n="detail.orders.title">Three orders</h3>
+            <p class="mt-2 text-base leading-normal font-normal" data-i18n="detail.orders.body">
+              Newest to oldest, the other way around, or a shuffle that happens once when you open the album.
+            </p>
+          </article>
+          <article class="rounded-cards bg-haze p-5 text-ink">
+            <h3 class="text-xl leading-[1.4] font-medium" data-i18n="detail.limited.title">Limited access</h3>
+            <p class="mt-2 text-base leading-normal font-normal" data-i18n="detail.limited.body">
+              If you allow only some photos, CleanRoll only sees those. The rest of the gallery stays out of the session.
+            </p>
+          </article>
+          <article class="rounded-cards bg-haze p-5 text-ink">
+            <h3 class="text-xl leading-[1.4] font-medium" data-i18n="detail.result.title">Clear result</h3>
+            <p class="mt-2 text-base leading-normal font-normal" data-i18n="detail.result.body">
+              When it finishes it says whether everything, part, or nothing was deleted. Canceling the system dialog does not count as a failure.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="privacidad" class="mx-auto max-w-[1150px] px-5 pb-20">
+        <header class="mx-auto max-w-3xl text-center">
+          <p class="text-xl leading-[1.4] font-medium" data-i18n="privacy.label">Privacy</p>
+          <h2 class="mt-4 text-[clamp(2rem,5vw,3.5rem)] leading-none font-medium">
+            <span data-i18n="privacy.title">Photos</span>
+            <span class="font-control-cursive font-normal italic" data-i18n="privacy.accent">never</span>
+            <span data-i18n="privacy.rest">leave.</span>
+          </h2>
+        </header>
+        <p class="mx-auto mt-8 max-w-xl text-center text-base leading-normal" data-i18n="privacy.body">
+          CleanRoll has no account, no server, and no analytics. The walkthrough needs no network. On the phone, only the theme and the language are saved. Everything else lives while the app is open.
+        </p>
+      </section>
+
+      <section id="descargar" class="mx-auto max-w-[1150px] px-5 pb-20">
+        <header class="mx-auto max-w-3xl text-center">
+          <p class="text-xl leading-[1.4] font-medium" data-i18n="install.label">Download</p>
+          <h2 class="mt-4 text-[clamp(2rem,5vw,3.5rem)] leading-none font-medium">
+            <span data-i18n="install.title">Install it</span>
+            <span class="font-control-cursive font-normal italic" data-i18n="install.accent">now</span>.
+          </h2>
+          <p class="mx-auto mt-6 max-w-xl text-base leading-normal" data-i18n="install.body">
+            Android, as an APK. CleanRoll does not update itself and there is nothing to export before changing versions.
+          </p>
+          <a
+            data-download
+            href="https://github.com/roypm/cleanroll/releases/download/v1.0.2/CleanRoll-v1.0.2.apk"
+            class="mt-8 inline-block rounded-buttons border border-whiteout px-4 py-[10px] text-sm font-medium"
+            data-i18n="install.cta"
+          >
+            Download APK
+          </a>
+          <p class="mt-4 text-[13px] leading-[1.5] font-medium">
+            v<span data-version>1.0.2</span>
+            ·
+            <span data-filename>CleanRoll-v1.0.2.apk</span>
+            ·
+            <span data-size data-bytes="48911484">46.6 MB</span>
+          </p>
+          <p class="mt-4">
+            <a
+              data-release-notes
+              href="https://github.com/roypm/cleanroll/releases/tag/v1.0.2"
+              class="border-b-2 border-signal-blue px-2 pb-0.5 text-base font-medium text-signal-blue"
+              rel="noreferrer"
+              target="_blank"
+              data-i18n="install.notes"
+            >
+              Release notes
+            </a>
+          </p>
+        </header>
+
+        <article class="mx-auto mt-12 max-w-xl rounded-cards bg-haze p-5 text-ink">
+          <h3 class="text-xl leading-[1.4] font-medium" data-i18n="install.phone">On the phone</h3>
+          <ol class="mt-4 list-decimal space-y-2 pl-5 text-base leading-normal font-normal">
+            <li data-i18n="install.step1">Download the APK.</li>
+            <li data-i18n="install.step2">Open CleanRoll and grant photo access, full or only some.</li>
+          </ol>
+          <p class="mt-4 text-base leading-normal font-normal" data-i18n="install.signing">
+            Published APKs are signed with the debug key. If Android rejects an update because the signature does not match, uninstall the previous version and install the new one. Uninstalling the app does not delete your photos.
+          </p>
+          <p class="mt-4">
+            <a
+              href="https://github.com/roypm/cleanroll"
+              class="inline-flex items-center gap-2 border-b-2 border-black-void px-2 pb-0.5 text-base font-medium text-ink"
+              rel="noreferrer"
+              target="_blank"
+            >
+              <svg class="h-4 w-4" aria-hidden="true"><use href="#github-mark"></use></svg>
+              <span data-i18n="install.code">Code on GitHub</span>
+            </a>
+          </p>
+        </article>
+      </section>
+    </main>
+
+    <footer class="border-t border-whiteout">
+      <div
+        class="mx-auto flex max-w-[1150px] flex-col gap-4 px-5 py-12 text-[13px] leading-[1.5] font-medium sm:flex-row sm:items-center sm:justify-between"
+      >
+        <div>
+          <p class="text-base font-medium">© 2026 CleanRoll</p>
+          <p class="mt-2 text-[13px] leading-[1.5] font-medium" data-i18n="footer.rights">All rights reserved.</p>
+        </div>
+        <p class="text-base font-medium">
+          <span data-i18n="footer.by">Made by</span>
+          <a
+            href="https://github.com/roypm"
+            class="inline-flex items-center gap-2 border-b-2 border-signal-blue px-2 pb-0.5 text-signal-blue"
+            rel="noreferrer"
+            target="_blank"
+          >
+            <svg class="h-4 w-4" aria-hidden="true"><use href="#github-mark"></use></svg>
+            Roy
+          </a>
+        </p>
+        <a
+          href="https://github.com/roypm/cleanroll/releases"
+          class="border-b-2 border-signal-blue px-2 pb-0.5 text-base font-medium text-signal-blue"
+          rel="noreferrer"
+          target="_blank"
+          data-i18n="footer.versions"
+        >
+          All versions
+        </a>
+      </div>
+    </footer>
+
+    <script>
+      const messages = {
+        en: {
+          "meta.title": "CleanRoll — Clean your camera roll without uploading a photo",
+          "meta.description": "CleanRoll is a local photo cleaner for Android. Pick an album, swipe to keep or mark, review, and confirm deletion with the system dialog.",
+          "meta.og": "Pick an album, swipe, review, and confirm. Photos never leave the phone.",
+          skip: "Skip to content",
+          "nav.primary": "Primary",
+          "nav.mobile": "Mobile",
+          "nav.walkthrough": "Walkthrough",
+          "nav.privacy": "Privacy",
+          "nav.github": "CleanRoll on GitHub",
+          "nav.download": "Download APK",
+          "nav.downloadShort": "Download",
+          "menu.open": "Menu",
+          "menu.close": "Close",
+          "lang.group": "Language",
+          "hero.eyebrow": "Photo cleaner for Android",
+          "hero.display": "Clean",
+          "hero.line": "the camera roll stays",
+          "hero.accent": "local.",
+          "hero.body": "Pick an album, swipe to keep a photo or mark it, and confirm deletion whenever you want. Photos never leave the phone.",
+          "hero.cta": "Download APK",
+          "hero.see": "See the walkthrough",
+          "hero.video": "CleanRoll demo: albums, swipe, review, and confirm deletion",
+          "hero.caption": "Plays on its own",
+          "demo.pause": "Pause",
+          "demo.play": "Play",
+          "facts.aria": "In one line",
+          "facts.phone": "On the phone only",
+          "facts.account": "No account",
+          "facts.analytics": "No analytics",
+          "steps.label": "How it works",
+          "steps.title": "Five steps.",
+          "steps.accent": "Zero",
+          "steps.rest": "rush.",
+          "steps.1.alt": "CleanRoll album grid, with each cover and photo count",
+          "steps.1.title": "Pick an album",
+          "steps.1.body": "A folder from the gallery. CleanRoll does not create, rename, or move albums.",
+          "steps.2.alt": "Sheet for choosing album order: newest, oldest, or random",
+          "steps.2.title": "Choose the order",
+          "steps.2.body": "Newest first, oldest first, or a one-time shuffle. Photos in the album appear in that order.",
+          "steps.3.alt": "A tilted photo stamped Delete while swiping to mark it",
+          "steps.3.title": "Swipe",
+          "steps.3.body": "One way you keep it. The other, you mark it. A tap works too. Undo covers the last five decisions.",
+          "steps.4.alt": "Review screen with two selected photos and the button to delete them",
+          "steps.4.title": "Review",
+          "steps.4.body": "Open Review whenever you want, including halfway through the album. Remove the ones you don't want and look at a thumbnail full screen.",
+          "steps.5.alt": "Android dialog asking whether CleanRoll can delete four photos",
+          "steps.5.title": "Confirm",
+          "steps.5.body": "Delete opens the system dialog. If you cancel, you stay on Review with the selection intact.",
+          "detail.label": "The detail",
+          "detail.title": "Built to",
+          "detail.accent": "not",
+          "detail.rest": "miss.",
+          "detail.mark.title": "Mark, don't delete",
+          "detail.mark.body": "Swiping Delete only flags the photo. The gallery changes when you confirm deletion in Review.",
+          "detail.session.title": "Session in memory",
+          "detail.session.body": "If you close the app before confirming, the library stays the same. There is no half-finished cleanup saved to disk.",
+          "detail.large.title": "Large albums",
+          "detail.large.body": "You don't have to reach the end. Review, delete the current selection, and continue on the same photo.",
+          "detail.orders.title": "Three orders",
+          "detail.orders.body": "Newest to oldest, the other way around, or a shuffle that happens once when you open the album.",
+          "detail.limited.title": "Limited access",
+          "detail.limited.body": "If you allow only some photos, CleanRoll only sees those. The rest of the gallery stays out of the session.",
+          "detail.result.title": "Clear result",
+          "detail.result.body": "When it finishes it says whether everything, part, or nothing was deleted. Canceling the system dialog does not count as a failure.",
+          "privacy.label": "Privacy",
+          "privacy.title": "Photos",
+          "privacy.accent": "never",
+          "privacy.rest": "leave.",
+          "privacy.body": "CleanRoll has no account, no server, and no analytics. The walkthrough needs no network. On the phone, only the theme and the language are saved. Everything else lives while the app is open.",
+          "install.label": "Download",
+          "install.title": "Install it",
+          "install.accent": "now",
+          "install.body": "Android, as an APK. CleanRoll does not update itself and there is nothing to export before changing versions.",
+          "install.cta": "Download APK",
+          "install.notes": "Release notes",
+          "install.phone": "On the phone",
+          "install.step1": "Download the APK.",
+          "install.step2": "Open CleanRoll and grant photo access, full or only some.",
+          "install.signing": "Published APKs are signed with the debug key. If Android rejects an update because the signature does not match, uninstall the previous version and install the new one. Uninstalling the app does not delete your photos.",
+          "install.code": "Code on GitHub",
+          "footer.rights": "All rights reserved.",
+          "footer.by": "Made by",
+          "footer.versions": "All versions",
+        },
+        es: {
+          "meta.title": "CleanRoll — Limpia tu carrete sin subir una foto",
+          "meta.description": "CleanRoll es un limpiador de fotos local para Android. Elige un álbum, desliza para quedarte o marcar, revisa y confirma el borrado con el diálogo del sistema.",
+          "meta.og": "Elige un álbum, desliza, revisa y confirma. Las fotos no salen del teléfono.",
+          skip: "Saltar al contenido",
+          "nav.primary": "Principal",
+          "nav.mobile": "Móvil",
+          "nav.walkthrough": "Recorrido",
+          "nav.privacy": "Privacidad",
+          "nav.github": "GitHub de CleanRoll",
+          "nav.download": "Descargar APK",
+          "nav.downloadShort": "Descargar",
+          "menu.open": "Menú",
+          "menu.close": "Cerrar",
+          "lang.group": "Idioma",
+          "hero.eyebrow": "Limpiador de fotos para Android",
+          "hero.display": "Limpia",
+          "hero.line": "el carrete queda",
+          "hero.accent": "local.",
+          "hero.body": "Elige un álbum, desliza para quedarte una foto o marcarla, y confirma el borrado cuando tú quieras. Las fotos no salen del teléfono.",
+          "hero.cta": "Descargar APK",
+          "hero.see": "Ver el recorrido",
+          "hero.video": "Demostración de CleanRoll: álbumes, deslizar, revisar y confirmar el borrado",
+          "hero.caption": "Se reproduce sola",
+          "demo.pause": "Pausa",
+          "demo.play": "Reproducir",
+          "facts.aria": "En una frase",
+          "facts.phone": "Solo en el teléfono",
+          "facts.account": "Sin cuenta",
+          "facts.analytics": "Sin analytics",
+          "steps.label": "Cómo funciona",
+          "steps.title": "Cinco pasos.",
+          "steps.accent": "Cero",
+          "steps.rest": "prisa.",
+          "steps.1.alt": "Cuadrícula de álbumes de CleanRoll, con la portada y el número de fotos de cada uno",
+          "steps.1.title": "Elige un álbum",
+          "steps.1.body": "Una carpeta de la galería. CleanRoll no crea, no renombra y no mueve álbumes.",
+          "steps.2.alt": "Hoja para elegir el orden del álbum: más nuevas, más antiguas o aleatorio",
+          "steps.2.title": "Elige el orden",
+          "steps.2.body": "Más nuevas primero, más antiguas primero, o un barajado de una sola vez. En ese orden aparecen las fotos del álbum.",
+          "steps.3.alt": "Una foto inclinada con el sello Delete mientras se desliza para marcarla",
+          "steps.3.title": "Desliza",
+          "steps.3.body": "A un lado te la quedas. Al otro, la marcas. También vale un toque. Deshacer cubre las últimas cinco decisiones.",
+          "steps.4.alt": "Pantalla Review con dos fotos seleccionadas y el botón para borrarlas",
+          "steps.4.title": "Revisa",
+          "steps.4.body": "Abre Review cuando quieras, también a mitad del álbum. Quita las que no y mira una miniatura a pantalla completa.",
+          "steps.5.alt": "Diálogo de Android preguntando si CleanRoll puede borrar cuatro fotos",
+          "steps.5.title": "Confirma",
+          "steps.5.body": "Borrar abre el diálogo del sistema. Si lo cancelas, sigues en Review con la selección intacta.",
+          "detail.label": "El detalle",
+          "detail.title": "Hecho para",
+          "detail.accent": "no",
+          "detail.rest": "equivocarte.",
+          "detail.mark.title": "Marca, no borra",
+          "detail.mark.body": "Deslizar Delete solo apunta la foto. La galería cambia cuando confirmas el borrado en Review.",
+          "detail.session.title": "Sesión en memoria",
+          "detail.session.body": "Si cierras la app antes de confirmar, la biblioteca sigue igual. No hay una limpieza a medias guardada en disco.",
+          "detail.large.title": "Álbumes grandes",
+          "detail.large.body": "No hace falta llegar al final. Revisas, borras la selección de ahora y sigues en la misma foto.",
+          "detail.orders.title": "Tres órdenes",
+          "detail.orders.body": "De más nuevas a más antiguas, al revés, o un barajado que se hace una sola vez al abrir el álbum.",
+          "detail.limited.title": "Acceso limitado",
+          "detail.limited.body": "Si solo permites algunas fotos, CleanRoll solo ve esas. El resto de la galería no entra en la sesión.",
+          "detail.result.title": "Resultado claro",
+          "detail.result.body": "Al terminar dice si se borró todo, una parte o nada. Cancelar el diálogo del sistema no cuenta como fallo.",
+          "privacy.label": "Privacidad",
+          "privacy.title": "Las fotos",
+          "privacy.accent": "no",
+          "privacy.rest": "salen.",
+          "privacy.body": "CleanRoll no tiene cuenta, servidor ni analítica. El recorrido no necesita red. En el teléfono solo se guardan el tema y el idioma. Lo demás vive mientras la app está abierta.",
+          "install.label": "Descarga",
+          "install.title": "Instálala",
+          "install.accent": "ahora",
+          "install.body": "Android, en un APK. CleanRoll no se actualiza sola y no hay nada que exportar antes de cambiar de versión.",
+          "install.cta": "Descargar APK",
+          "install.notes": "Notas de esta versión",
+          "install.phone": "En el teléfono",
+          "install.step1": "Descarga el APK.",
+          "install.step2": "Abre CleanRoll y concede acceso a las fotos, completo o solo a algunas.",
+          "install.signing": "Las APK publicadas van firmadas con la clave de depuración. Si Android rechaza una actualización porque la firma no coincide, desinstala la versión anterior e instala la nueva. Desinstalar la app no borra las fotos.",
+          "install.code": "Código en GitHub",
+          "footer.rights": "Derechos reservados.",
+          "footer.by": "Creado por",
+          "footer.versions": "Todas las versiones",
+        },
+        ca: {
+          "meta.title": "CleanRoll — Neteja el carret sense pujar cap foto",
+          "meta.description": "CleanRoll és un netejador de fotos local per a Android. Tria un àlbum, llisca per quedar-te-la o marcar-la, revisa i confirma l'esborrat amb el diàleg del sistema.",
+          "meta.og": "Tria un àlbum, llisca, revisa i confirma. Les fotos no surten del telèfon.",
+          skip: "Salta al contingut",
+          "nav.primary": "Principal",
+          "nav.mobile": "Mòbil",
+          "nav.walkthrough": "Recorregut",
+          "nav.privacy": "Privadesa",
+          "nav.github": "GitHub de CleanRoll",
+          "nav.download": "Baixa l'APK",
+          "nav.downloadShort": "Baixa",
+          "menu.open": "Menú",
+          "menu.close": "Tanca",
+          "lang.group": "Llengua",
+          "hero.eyebrow": "Netejador de fotos per a Android",
+          "hero.display": "Neteja",
+          "hero.line": "el carret queda",
+          "hero.accent": "local.",
+          "hero.body": "Tria un àlbum, llisca per quedar-te una foto o marcar-la, i confirma l'esborrat quan tu vulguis. Les fotos no surten del telèfon.",
+          "hero.cta": "Baixa l'APK",
+          "hero.see": "Mira el recorregut",
+          "hero.video": "Demostració de CleanRoll: àlbums, lliscar, revisar i confirmar l'esborrat",
+          "hero.caption": "Es reprodueix sola",
+          "demo.pause": "Pausa",
+          "demo.play": "Reprodueix",
+          "facts.aria": "En una frase",
+          "facts.phone": "Només al telèfon",
+          "facts.account": "Sense compte",
+          "facts.analytics": "Sense analítica",
+          "steps.label": "Com funciona",
+          "steps.title": "Cinc passos.",
+          "steps.accent": "Zero",
+          "steps.rest": "pressa.",
+          "steps.1.alt": "Graella d'àlbums de CleanRoll, amb la portada i el nombre de fotos de cadascun",
+          "steps.1.title": "Tria un àlbum",
+          "steps.1.body": "Una carpeta de la galeria. CleanRoll no crea, no reanomena i no mou àlbums.",
+          "steps.2.alt": "Full per triar l'ordre de l'àlbum: més noves, més antigues o aleatori",
+          "steps.2.title": "Tria l'ordre",
+          "steps.2.body": "Primer les més noves, primer les més antigues, o una barreja d'una sola vegada. En aquest ordre apareixen les fotos de l'àlbum.",
+          "steps.3.alt": "Una foto inclinada amb el segell Delete mentre es llisca per marcar-la",
+          "steps.3.title": "Llisca",
+          "steps.3.body": "Cap a un costat te la quedes. Cap a l'altre, la marques. També val un toc. Desfer cobreix les últimes cinc decisions.",
+          "steps.4.alt": "Pantalla Review amb dues fotos seleccionades i el botó per esborrar-les",
+          "steps.4.title": "Revisa",
+          "steps.4.body": "Obre Review quan vulguis, també a mig àlbum. Treu les que no i mira una miniatura a pantalla completa.",
+          "steps.5.alt": "Diàleg d'Android que pregunta si CleanRoll pot esborrar quatre fotos",
+          "steps.5.title": "Confirma",
+          "steps.5.body": "Esborrar obre el diàleg del sistema. Si el cancel·les, continues a Review amb la selecció intacta.",
+          "detail.label": "El detall",
+          "detail.title": "Fet per",
+          "detail.accent": "no",
+          "detail.rest": "equivocar-te.",
+          "detail.mark.title": "Marca, no esborra",
+          "detail.mark.body": "Lliscar Delete només apunta la foto. La galeria canvia quan confirmes l'esborrat a Review.",
+          "detail.session.title": "Sessió en memòria",
+          "detail.session.body": "Si tanques l'app abans de confirmar, la biblioteca segueix igual. No hi ha una neteja a mitges desada al disc.",
+          "detail.large.title": "Àlbums grans",
+          "detail.large.body": "No cal arribar al final. Revises, esborres la selecció d'ara i continues a la mateixa foto.",
+          "detail.orders.title": "Tres ordres",
+          "detail.orders.body": "De més noves a més antigues, a l'inrevés, o una barreja que es fa una sola vegada en obrir l'àlbum.",
+          "detail.limited.title": "Accés limitat",
+          "detail.limited.body": "Si només permets algunes fotos, CleanRoll només veu aquestes. La resta de la galeria no entra a la sessió.",
+          "detail.result.title": "Resultat clar",
+          "detail.result.body": "En acabar diu si s'ha esborrat tot, una part o res. Cancel·lar el diàleg del sistema no compta com a error.",
+          "privacy.label": "Privadesa",
+          "privacy.title": "Les fotos",
+          "privacy.accent": "no",
+          "privacy.rest": "surten.",
+          "privacy.body": "CleanRoll no té compte, servidor ni analítica. El recorregut no necessita xarxa. Al telèfon només es desen el tema i la llengua. La resta viu mentre l'app és oberta.",
+          "install.label": "Baixada",
+          "install.title": "Instal·la-la",
+          "install.accent": "ara",
+          "install.body": "Android, en un APK. CleanRoll no s'actualitza sola i no hi ha res per exportar abans de canviar de versió.",
+          "install.cta": "Baixa l'APK",
+          "install.notes": "Notes d'aquesta versió",
+          "install.phone": "Al telèfon",
+          "install.step1": "Baixa l'APK.",
+          "install.step2": "Obre CleanRoll i concedeix accés a les fotos, complet o només a algunes.",
+          "install.signing": "Els APK publicats van signats amb la clau de depuració. Si Android rebutja una actualització perquè la signatura no coincideix, desinstal·la la versió anterior i instal·la la nova. Desinstal·lar l'app no esborra les fotos.",
+          "install.code": "Codi a GitHub",
+          "footer.rights": "Tots els drets reservats.",
+          "footer.by": "Creat per",
+          "footer.versions": "Totes les versions",
+        },
+      };
+
+      const supported = ["en", "es", "ca"];
+      const storageKey = "cleanroll-lang";
+      let currentLang = "en";
+
+      function languageCode(tag) {
+        return String(tag || "").toLowerCase().split("-")[0];
+      }
+
+      function detectLanguage() {
+        const fromQuery = languageCode(new URLSearchParams(location.search).get("lang"));
+        if (supported.includes(fromQuery)) {
+          return fromQuery;
+        }
+        try {
+          const stored = localStorage.getItem(storageKey);
+          if (supported.includes(stored)) {
+            return stored;
+          }
+        } catch (error) {}
+        const list = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+        for (const tag of list) {
+          const code = languageCode(tag);
+          if (supported.includes(code)) {
+            return code;
+          }
+        }
+        return "en";
+      }
+
+      function text(key) {
+        return messages[currentLang][key];
+      }
+
+      function formatSize(bytes) {
+        const locale = currentLang === "en" ? "en" : currentLang;
+        const formatted = new Intl.NumberFormat(locale, {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1,
+        }).format(bytes / (1024 * 1024));
+        return formatted + " MB";
+      }
+
+      let demoPaused = false;
+
+      function refreshChrome() {
+        const menuToggle = document.querySelector("#menu-toggle");
+        const open = menuToggle.getAttribute("aria-expanded") === "true";
+        menuToggle.textContent = open ? text("menu.close") : text("menu.open");
+        const demoToggle = document.querySelector("#demo-toggle");
+        demoToggle.textContent = demoPaused ? text("demo.play") : text("demo.pause");
+        demoToggle.setAttribute("aria-pressed", String(demoPaused));
+        document.querySelectorAll("[data-size]").forEach((node) => {
+          const bytes = Number(node.getAttribute("data-bytes"));
+          if (bytes) {
+            node.textContent = formatSize(bytes);
+          }
+        });
+        document.querySelectorAll("[data-lang-button]").forEach((button) => {
+          const active = button.getAttribute("data-lang-button") === currentLang;
+          button.setAttribute("aria-pressed", String(active));
+          button.classList.toggle("text-signal-blue", !active);
+          button.classList.toggle("border-signal-blue", !active);
+          button.classList.toggle("border-transparent", active);
+        });
+      }
+
+      function apply(lang) {
+        currentLang = lang;
+        document.documentElement.lang = lang;
+        document.title = text("meta.title");
+        document.querySelector('meta[name="description"]').setAttribute("content", text("meta.description"));
+        document.querySelector('meta[property="og:title"]').setAttribute("content", text("meta.title"));
+        document.querySelector('meta[property="og:description"]').setAttribute("content", text("meta.og"));
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const key = el.getAttribute("data-i18n");
+          const value = messages[lang][key];
+          if (value == null) {
+            return;
+          }
+          const attr = el.getAttribute("data-i18n-attr");
+          if (attr) {
+            el.setAttribute(attr, value);
+          } else {
+            el.textContent = value;
+          }
+        });
+        refreshChrome();
+      }
+
+      function chooseLanguage(lang) {
+        try {
+          localStorage.setItem(storageKey, lang);
+        } catch (error) {}
+        const url = new URL(location.href);
+        url.searchParams.set("lang", lang);
+        history.replaceState(null, "", url);
+        apply(lang);
+      }
+
+      document.querySelectorAll("[data-lang-button]").forEach((button) => {
+        button.addEventListener("click", () => {
+          chooseLanguage(button.getAttribute("data-lang-button"));
+        });
+      });
+
+      const menuToggle = document.querySelector("#menu-toggle");
+      const mobileMenu = document.querySelector("#mobile-menu");
+
+      menuToggle.addEventListener("click", () => {
+        const open = mobileMenu.classList.toggle("hidden") === false;
+        menuToggle.setAttribute("aria-expanded", String(open));
+        menuToggle.textContent = open ? text("menu.close") : text("menu.open");
+      });
+
+      mobileMenu.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.add("hidden");
+          menuToggle.setAttribute("aria-expanded", "false");
+          menuToggle.textContent = text("menu.open");
+        });
+      });
+
+      const demo = document.querySelector("#demo");
+      const demoToggle = document.querySelector("#demo-toggle");
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      function setDemoPaused(paused) {
+        demoPaused = paused;
+        if (paused) {
+          demo.pause();
+        } else {
+          demo.play();
+        }
+        demoToggle.textContent = paused ? text("demo.play") : text("demo.pause");
+        demoToggle.setAttribute("aria-pressed", String(paused));
+      }
+
+      if (reduceMotion.matches) {
+        demo.removeAttribute("autoplay");
+        setDemoPaused(true);
+      }
+
+      demoToggle.addEventListener("click", () => {
+        setDemoPaused(!demo.paused);
+      });
+
+      apply(detectLanguage());
+
+      fetch("https://api.github.com/repos/roypm/cleanroll/releases/latest")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("release");
+          }
+          return response.json();
+        })
+        .then((release) => {
+          const asset = (release.assets || []).find((item) => item.name.endsWith(".apk"));
+          if (!asset) {
+            return;
+          }
+          document.querySelectorAll("[data-download]").forEach((link) => {
+            link.href = asset.browser_download_url;
+          });
+          document.querySelectorAll("[data-version]").forEach((node) => {
+            node.textContent = String(release.tag_name || "").replace(/^v/, "");
+          });
+          document.querySelectorAll("[data-filename]").forEach((node) => {
+            node.textContent = asset.name;
+          });
+          document.querySelectorAll("[data-size]").forEach((node) => {
+            node.setAttribute("data-bytes", String(asset.size));
+            node.textContent = formatSize(asset.size);
+          });
+          const notes = document.querySelector("[data-release-notes]");
+          if (notes && release.html_url) {
+            notes.href = release.html_url;
+          }
+        })
+        .catch(() => {});
+    </script>
+  </body>
+</html>
